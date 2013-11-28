@@ -8,9 +8,9 @@ class Float
   
   # Ensures that the modulus operator returns zero if a divide
   # by zero error would occur.
-  alias_method :__mod :%
+  alias_method :__modulo :modulo
   def %(other)
-    other.zero? ? 0 : __mod(other)
+    other.zero? ? 0 : __modulo(other)
   end
   alias_method :modulo :%
 
