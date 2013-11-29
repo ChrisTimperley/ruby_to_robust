@@ -16,10 +16,10 @@ class Fixnum
   
   # Ensures that the modulus operator returns zero if a divide
   # by zero error would occur.
-  alias :__modulo :modulo
+  alias_method :__modulo :modulo
   def %(other)
     other.zero? 0 : __modulo(other)
   end
-  alias :modulo :%
+  alias_method :modulo :%
   
 end
