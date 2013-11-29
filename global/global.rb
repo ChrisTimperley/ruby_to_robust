@@ -1,11 +1,15 @@
 # The Global robustness module implements a simplified (and faster) variant of the global
-# robustness measure outlined in Chris Timperley's Masters' Thesis.
+# robustness measure outlined in Chris Timperley's Master's Thesis.
 #
 # Methods executed under global robustness protection are executed within an exception
 # catching block which intercept any errors which cause the method to fail 
 #
 # For now this measure only works with simple methods that do not change the state of 
 # objects or interfere with the global state.
+#
+# NEED TO CLONE PARAMETERS.
+#
+# Author: Chris Timperley
 module RubyToRobust::Global
 
   # Optimism setting could be used to attempt to execute the program before
@@ -56,8 +60,7 @@ module RubyToRobust::Global
     []
   end
 
-  # Repairs a given (statically defined) method using the details provided about
-  # the error it encountered.
+  # Repairs a given (statically defined) method using the details of an encountered error.
   #
   # Special care must be taken to define repair. In this context, a repaired method
   # is one which does not suffer from the same error that it did originally. This means
@@ -68,6 +71,7 @@ module RubyToRobust::Global
   #
   # *Parameters:*
   # * method, the broken method to be repaired.
+  # * params, the parameters to the original method call.
   # * error, the error that occurred when the method was called.
   #
   # *Returns:*
@@ -86,7 +90,7 @@ module RubyToRobust::Global
       fix_method = fix.apply(method)
 
       begin
-        fix_method.call(*params)
+        fix_method.call(*params.clone)
         return fix_method
       rescue => fix_error
         return fix if fix.successful?(error, fix_error)

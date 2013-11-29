@@ -1,6 +1,8 @@
 # The Local robustness module is a slightly tailored version of the local robustness layer
 # proposed in Chris Timperley's Master's Thesis.
 #
+# WARNING: Thread safety is a concern.
+#
 # Author: Chris Timperley
 module RubyToRubust::Local
 
@@ -34,6 +36,16 @@ module RubyToRubust::Local
 
 
   protected
+  
+  # Patch
+  # - class (e.g. Float)
+  # - method (e.g. :/)
+  # - patch (lambda)
+  # - apply()
+  # - unapply()
+  def self.register_patch
+
+  end
 
   def self.enable_patches!
 
