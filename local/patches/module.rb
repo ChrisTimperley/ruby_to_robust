@@ -15,6 +15,10 @@
 # the method call, then:
 # * If there are too few parameters, pad the list with zeroes (arbitrary choice!).
 # * If there are too many parameters, restrict the length of the list to the arity of the method.
+#
+# Unfortunately, unlike other local robustness patches, the method storage and removal behaviour
+# of this patch cannot be disabled after the patch has been loaded. Simply because it would not
+# be possible to determine which methods to store and which ones not to store!
 class Module
 
   # Stores added methods in an internal method store before removing them from the object.
@@ -51,12 +55,18 @@ class Module
   # *Return:*
   # The result of the matched method call.
 	def method_missing(method_name, *args, &block)
+
+    # Convert the method symbol to a string, ready for lookup.
+    method_name = method_name.to_s
+
+    # If local robustness is disabled then restore the normal method call semantics.
+    unless RubyToRobust::Local.enabled?
+      return @methods[method_name.to_s].call(*args) if @methods.key? method_name
+      raise NoMethodError
+    end
 	
 		# Maximum levenshtein distance allowed between a candidate and the requested method.
 		max_distance = 5
-	
-		# Convert the method symbol to a string, ready for lookup.
-		method_name = method_name.to_s
 		
 		# If no method exists with the given name then find the method with the closest
 		# name (measured by levenshtein distance). Only consider candidates whose distance
