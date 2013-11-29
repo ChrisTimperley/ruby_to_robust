@@ -6,6 +6,9 @@
 # Author: Chris Timperley
 module RubyToRubust::Local
 
+  # By default local robustness is disabled.
+  @@enabled = false
+
   # Executes a given method (or proc) under local robustness protection.
   #
   # *Parameters:*
@@ -34,6 +37,15 @@ module RubyToRubust::Local
 
   end
 
+  # Returns true if local robustness is enabled.
+  def self.enabled?
+    @@enabled
+  end
+
+  # Returns false if local robustness is disabled.
+  def self.disabled?
+    not enabled?
+  end
 
   protected
   
