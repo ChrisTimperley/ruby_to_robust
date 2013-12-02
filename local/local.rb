@@ -1,13 +1,20 @@
 # The Local robustness module is a slightly tailored version of the local robustness layer
 # proposed in Chris Timperley's Master's Thesis.
 #
+# For now patches are enabled and disabled by checking the status of the "enabled" flag in 
+# the Local robustness module for each individual patch.
+# 
+# A far nicer alternative would be to implement patches as instances of a Patch class.
+# This class would then contain details of the target class and method as well as a
+# lambda function implementing the patched form of the method.
+#
 # WARNING: Thread safety is a concern.
 #
 # Author: Chris Timperley
 module RubyToRubust::Local
 
-  # By default local robustness is disabled.
-  @@enabled = false
+  # By default the robustness measures are disabled.
+  @enabled = false
 
   # Executes a given method (or proc) under local robustness protection.
   #
@@ -20,11 +27,11 @@ module RubyToRubust::Local
   def self.execute(method, params)
 
     # Before calling the method, enable all the attached monkey patches
-    # to use "softer" semantics. After finding the result of the 
+    # to use "softer" semantics.
     begin
 
       enable_patches!
-      result = method.call(*params)
+      return method.call(*params)
 
     # Ensure that all the patches are disabled and the original semantics
     # are restored before returning the result, even when an exception
@@ -33,15 +40,13 @@ module RubyToRubust::Local
       disable_patches!
     end
 
-    return result
-
   end
 
-  # Returns true if local robustness is enabled.
+  # Returns true if this robustness measure is enabled, false if not.
   def self.enabled?
-    @@enabled
+    @enabled
   end
-
+  
   # Returns false if local robustness is disabled.
   def self.disabled?
     not enabled?
@@ -59,12 +64,14 @@ module RubyToRubust::Local
 
   end
 
+  # Enables all the local robustness patches for soft semantics.
   def self.enable_patches!
-
+    @enabled = true
   end
 
+  # Disables the soft semantic patches and restores standard semantics.
   def self.disable_patches!
-
+    @enabled = false
   end
 
 end
