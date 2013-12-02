@@ -11,7 +11,7 @@
 # WARNING: Thread safety is a concern.
 #
 # Author: Chris Timperley
-module RubyToRubust::Local
+module RubyToRobust::Local
 
   # By default the robustness measures are disabled.
   @enabled = false
@@ -46,7 +46,7 @@ module RubyToRubust::Local
   def self.enabled?
     @enabled
   end
-  
+
   # Returns false if local robustness is disabled.
   def self.disabled?
     not enabled?
