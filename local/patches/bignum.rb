@@ -8,5 +8,5 @@ end
 # Ensures that the modulus operator returns zero if a divide
 # by zero error would occur.
 RubyToRobust::Local.register_patch(Bignum, :%, :__mod) do |other|
-  other.zero? ? 0 : modulo(other)
+  other.zero? ? 0 : __mod(other)
 end
