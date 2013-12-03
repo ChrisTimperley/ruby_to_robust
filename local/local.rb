@@ -66,8 +66,8 @@ module RubyToRobust::Local
     context.collapse_methods!
   end
 
-  # Clears the method look-up table for each associated context object and
-  # clears the list of associated context objects.
+  # Clears the list of associated context objects and restores their method
+  # look-up table into standard methods.
   def self.clear
     @contexts.each { |c| c.restore_methods! }
     @contexts.clear
