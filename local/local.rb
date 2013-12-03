@@ -16,6 +16,9 @@ module RubyToRobust::Local
   # By default the robustness measures are disabled.
   @enabled = false
 
+  # List of associated contexts for soft-binding.
+  @contexts = []
+
   # Executes a given method (or proc) under local robustness protection.
   #
   # *Parameters:*
@@ -50,6 +53,24 @@ module RubyToRobust::Local
   # Returns false if local robustness is disabled.
   def self.disabled?
     not enabled?
+  end
+
+  # Prepares the local robustness layer to be used.
+  # Produces the method look-up table for the associated context object and
+  # detaches all the original methods.
+  #
+  # *Parameters:*
+  # * context, the context object to prepare.
+  def self.prepare(context)
+    @contexts << context
+    context.collapse_methods!
+  end
+
+  # Clears the method look-up table for each associated context object and
+  # clears the list of associated context objects.
+  def self.clear
+    @contexts.each { |c| c.restore_methods! }
+    @contexts.clear
   end
 
   protected
