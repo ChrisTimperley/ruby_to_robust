@@ -7,7 +7,7 @@ end
 # by returning zero when the denominator is zero.
 RubyToRobust::Local.register_patch(Fixnum, :/, :__div) do |other|
   return __div(other) unless other.zero?
-  return other.kind_of? Float ? 0.0 : 0
+  return other.kind_of?(Float) ? 0.0 : 0
 end
 
 # Ensures that the modulus operator returns zero if a divide
