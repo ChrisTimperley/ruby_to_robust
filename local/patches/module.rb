@@ -1,5 +1,4 @@
-# Exploits the 'method_added' and 'method_missing' hooks to implement a custom
-# message passing protocol.
+# Exploits the 'method_missing' hook to implement a custom message passing protocol.
 #
 # All added methods are stored in an internal array before being removed from the object.
 #
@@ -15,103 +14,63 @@
 # the method call, then:
 # * If there are too few parameters, pad the list with zeroes (arbitrary choice!).
 # * If there are too many parameters, restrict the length of the list to the arity of the method.
-#
-# Unfortunately, unlike other local robustness patches, the method storage and removal behaviour
-# of this patch cannot be disabled after the patch has been loaded. Simply because it would not
-# be possible to determine which methods to store and which ones not to store!
-class Module
+RubyToRobust::Local.register_patch(Module, :method_missing, :__method_missing, eternal: true) do |method_name, *args, &block|
+  
+  # Convert the method symbol to a string, ready for lookup.
+  method_name = method_name.to_s
 
-  # Stores added methods in an internal method store before removing them from the object.
-  #
-  # *Parameters:*
-  # * method_symbol, the symbol of the added method.
-	def method_added(method_symbol)
-		
-		# Check that the method isn't forbidden.
-		return if [:method_missing, :method_added].include? method_symbol
-		
-		# Create the method dictionary for this class/module if it
-		# hasn't been created already.
-		@methods = {} unless defined? @methods
-		
-		# Extract the method from the class and store it in the
-		# private dictionary using the string form of the method name as the key.
-		method = instance_method(method_symbol)
-		@methods[method_symbol.to_s] = method
-		
-		# Remove the method from the class.
-		method.owner.instance_eval { remove_method(method_symbol) }
-		
-	end
+  # If local robustness is disabled then restore the normal method call semantics.
+  unless RubyToRobust::Local.enabled?
+    return @__methods[method_name.to_s].call(*args) if @__methods.key? method_name
+    raise NoMethodError
+  end
 
-	# Called on every user-added method invocation, since these methods are
-	# removed by method_added.
-  #
-  # *Parameters:*
-  # * method_name, the name of the method that was called (as a symbol).
-  # * args, a list of the arguments supplied with the method call.
-  # * block, the block attached to the method call.
-  #
-  # *Return:*
-  # The result of the matched method call.
-	def method_missing(method_name, *args, &block)
+  # Maximum levenshtein distance allowed between a candidate and the requested method.
+  # COULD BE A PROPERTY IN LOCAL MODULE?
+  max_distance = 5
+  
+  # If no method exists with the given name then find the method with the closest
+  # name (measured by levenshtein distance). Only consider candidates whose distance
+  # to the requested method is less or equal to the maximum distance.
+  unless @__methods.key? method_name
 
-    # Convert the method symbol to a string, ready for lookup.
-    method_name = method_name.to_s
-
-    # If local robustness is disabled then restore the normal method call semantics.
-    unless RubyToRobust::Local.enabled?
-      return @methods[method_name.to_s].call(*args) if @methods.key? method_name
-      raise NoMethodError
+    best_candidate = nil
+    best_score = nil
+    @__methods.each_key do |cname|
+    
+      # Only calculate the distance if the difference in length between the requested
+      # and candidate methods is less or equal to the maximum distance.
+      unless (cname.length - method_name.length).abs > max_distance
+        distance = Text::Levenshtein.distance(cname, meth)
+        if distance <= max_distance and (best_score.nil? or distance < best_score)
+          best_candidate = cname
+          best_score = distance
+        end
+      end
     end
-	
-		# Maximum levenshtein distance allowed between a candidate and the requested method.
-		max_distance = 5
-		
-		# If no method exists with the given name then find the method with the closest
-		# name (measured by levenshtein distance). Only consider candidates whose distance
-		# to the requested method is less or equal to the maximum distance.
-		unless @methods.key? method_name
+    
+    # Attempt to call the best candidate.
+    # If no appropriate candidate is found, raise a NoMethodError.
+    raise NoMethodError if best_candidate.nil?
+    method_name = best_candidate
+  
+  end
 
-			best_candidate = nil
-			best_score = nil
-			@methods.each_key do |cname|
-			
-				# Only calculate the distance if the difference in length between the requested
-				# and candidate methods is less or equal to the maximum distance.
-				unless (cname.length - method_name.length).abs > max_distance
-					distance = Text::Levenshtein.distance(cname, meth)
-					if distance <= max_distance and (best_score.nil? or distance < best_score)
-						best_candidate = cname
-						best_score = distance
-					end
-				end
-			end
-			
-			# Attempt to call the best candidate.
-			# If no appropriate candidate is found, raise a NoMethodError.
-			raise NoMethodError if best_candidate.nil?
-			method_name = best_candidate
-		
-		end
-	
-		# Retrieve the method object for the selected method.
-		method = @methods[method_name]
-			
-		# If no arguments are provided and the arity of this method is greater than zero,
-		# then return zero.
-		return 0 if method.arity > 0 and args.length == 0
-		
-		# If fewer arguments than necessary are provided then pad the arguments with zeros.
-		args = args.fill(0, args.length...method.arity) if method.arity > args.length
-		
-		# If more arguments than necessary are provided, restrict them to the function's
-		# arity.
-		args = args.first(method.arity) if method.arity != -1 and args.length > method.arity
-		
-		# Call the method with the filtered arguments.
-		return method.bind(self).call(*args)
-		
-	end
+  # Retrieve the method object for the selected method.
+  method = @__methods[method_name]
+    
+  # If no arguments are provided and the arity of this method is greater than zero,
+  # then return zero.
+  return 0 if method.arity > 0 and args.length == 0
+  
+  # If fewer arguments than necessary are provided then pad the arguments with zeros.
+  args = args.fill(0, args.length...method.arity) if method.arity > args.length
+  
+  # If more arguments than necessary are provided, restrict them to the function's
+  # arity.
+  args = args.first(method.arity) if method.arity != -1 and args.length > method.arity
+  
+  # Call the method with the filtered arguments.
+  return method.bind(self).call(*args)
 
 end
