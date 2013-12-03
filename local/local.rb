@@ -75,23 +75,26 @@ module RubyToRobust::Local
 
   protected
   
-  # Patch
-  # - class (e.g. Float)
-  # - method (e.g. :/)
-  # - patch (lambda)
-  # - apply()
-  # - unapply()
-  def self.register_patch
-
+  # Registers a patch for use with local robustness protection.
+  #
+  # *Parameters:*
+  # * binding, the class or module of the method that should be patched.
+  # * name, the name of the method to be patched.
+  # * backup, the name to store the old method under.
+  # * replacement, the replacement method itself.
+  def self.register_patch(binding, name, backup, &replacement)
+    @patches << RubyToRobust::Local::Patch.new(binding, name, backup, replacement)
   end
 
   # Enables all the local robustness patches for soft semantics.
   def self.enable_patches!
+    @patches.each { |p| p.apply }
     @enabled = true
   end
 
   # Disables the soft semantic patches and restores standard semantics.
   def self.disable_patches!
+    @patches.each { |p| p.unapply }
     @enabled = false
   end
 
