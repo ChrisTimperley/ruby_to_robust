@@ -19,6 +19,9 @@ module RubyToRobust::Local
   # List of associated contexts for soft-binding.
   @contexts = []
 
+  # List of patches.
+  @patches = []
+
   # Executes a given method (or proc) under local robustness protection.
   #
   # *Parameters:*
@@ -88,13 +91,13 @@ module RubyToRobust::Local
 
   # Enables all the local robustness patches for soft semantics.
   def self.enable_patches!
-    @patches.each { |p| p.apply }
+    @patches.each { |p| p.apply! }
     @enabled = true
   end
 
   # Disables the soft semantic patches and restores standard semantics.
   def self.disable_patches!
-    @patches.each { |p| p.unapply }
+    @patches.each { |p| p.unapply! }
     @enabled = false
   end
 

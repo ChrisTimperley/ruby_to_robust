@@ -26,7 +26,7 @@ class Proc
   end
 
   # Store the original procedure call method.
-  alias_method :__call :call
+  alias_method :__call, :call
 
   # Calls this procedure.
   #
@@ -35,6 +35,7 @@ class Proc
   #
   # *Returns:*
   # The result of the procedure call.
+  """
   def call(*params)
 
     # If this procedure uses local robustness then 
@@ -57,5 +58,6 @@ class Proc
     return __call(*params)
 
   end
+  """
 
 end

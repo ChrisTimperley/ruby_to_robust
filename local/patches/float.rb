@@ -1,5 +1,5 @@
 # Ensures that any float divided by zero gives 0.0
-RubyToRobust::Local.register_patch(Fixnum, :/, :__fdiv) do |other|
+RubyToRobust::Local.register_patch(Float, :/, :__fdiv) do |other|
   other.zero? ? 0.0 : __fdiv(other)
 end
 

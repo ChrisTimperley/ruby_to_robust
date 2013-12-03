@@ -1,7 +1,7 @@
 # Implements a local robustness patch.
 #
 # These patches are used to implement "softer" semantics in the program.
-class Wallace::Local::Patch
+class RubyToRobust::Local::Patch
 
   # Constructs a new patch.
   #
@@ -18,14 +18,14 @@ class Wallace::Local::Patch
   end
 
   # Applies this patch.
-  def apply
+  def apply!
     @binding.send(:alias_method, @backup, @name)
     @binding.send(:define_method, @name, @replacement)
   end
 
   # Removes this patch.
-  def unapply
-    @binding.send(:define_method, @name, @binding.method(@backup))
+  def unapply!
+    @binding.send(:define_method, @name, @binding.instance_method(@backup))
     @binding.send(:remove_method, @backup)
   end
 
