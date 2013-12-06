@@ -1,6 +1,9 @@
 # Instances of this class are used to represent candidate fixes / solutions to given errors that
 # have occurred during the execution of a method.
 #
+# A fix operates on the source code of a method, adding, removing and replacing specific lines of
+# code (like a Git patch/change) in an attempt to remove the source of the error.
+#
 # As mentioned elsewhere in the Global module, strategies may return an ordered sequence of fixes
 # according to the likelihood that they will solve the problem (or by their performance penalty to
 # the method), but as this ordering is carried out by the strategies and all ordering information is
@@ -13,33 +16,37 @@
 class RubyToRobust::Global::Fix
 
   # Creates a new candidate fix.
-  def initialize
-
+  #
+  # *Parameters:*
+  # * changes, an array of changes that the fix should make to the source code.
+  # * validator, a lambda function that verifies a given error is not the same as the original error.
+  def initialize(changes, &validator)
+    @changes = []
+    @validator = validator
+    # Atom(line)
+    # RemoveAtom < Atom
+    # AddAtom(line, new) < Atom
+    # SwapAtom(line, new) < Atom
   end
 
   # Applies the proposed changes to the source code of the affected method.
   #
+  # *Parameters:*
+  # * method, the affected method.
+  #
   # *Returns*
-  # Could return an altered form of the method rather than changing the actual method?
-  # Although more (initially) expensive in terms of memory it removes the need for unapply and
-  # reduces the overall complexity of the process.
-  def apply!
-
+  # A variant of the affected method modified according to the changes given by this fix.
+  def apply(method)
+    method
   end
-
-  # Reverts the changes made by this candidate fix, returning the affected source code to its
-  # prior state.
-  def unapply!
-
-  end
-  alias :revert :unapply
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*
   # to determine whether the fix has been successful in removing the source of the original error.
   # A "fixed" method in this sense is not necessarily one which removes all errors from a given method,
   # rather it removes a particular identifiable error.
-  def successful?
-
+  def successful?(method, original_error, new_error)
+    @validator[method, original_error, new_error]
   end
+  alias_method :validate :successful?
 
 end
