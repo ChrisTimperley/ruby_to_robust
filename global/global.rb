@@ -64,8 +64,8 @@ module RubyToRobust::Global
   #
   # *Returns:*
   # An array of candidate fixes to the error.
-  def self.candidates(method, error)
-    @strategies.map { |c| c.candidates(method, error) }.flatten
+  def self.generate_candidates(method, error)
+    @strategies.map { |s| s.generate_candidates(method, error) }.flatten
   end
 
   # Repairs a given (statically defined) method using the details of an encountered error.
@@ -88,7 +88,7 @@ module RubyToRobust::Global
 
     # Produce a series of candidate fixes to the method.
     # WOULD BE *POTENTIALLY* FASTER IF THIS WAS ORDERED!
-    candidates = []
+    candidates = generate_candidates(method, error)
 
     # Attempt each of the candidate fixes until the error is prevented or there are no
     # further candidates to try.
