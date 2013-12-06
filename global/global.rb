@@ -49,6 +49,14 @@ module RubyToRobust::Global
   end
 
   # Calculates all the possible candidate fixes to a given error within a provided method.
+  # Passes the details of the error along with the method to each associated error handling
+  # strategy and queries all possible candidate solutions.
+  #
+  # *TODO:*
+  # At the moment each strategy may return an ordered set of candidate fixes to the problem,
+  # but this ordering information is implicit (and usually not universally comparable) so there
+  # can be no ordering of candidate fixes from ALL given strategies (i.e. strategy B may produce
+  # a strategy that is more likely to solve the error than the best candidate given by strategy A).
   #
   # *Parameters:*
   # * method, the method to be fixed.
@@ -57,7 +65,7 @@ module RubyToRobust::Global
   # *Returns:*
   # An array of candidate fixes to the error.
   def self.candidates(method, error)
-    []
+    @strategies.map { |c| c.candidates(method, error) }.flatten
   end
 
   # Repairs a given (statically defined) method using the details of an encountered error.
