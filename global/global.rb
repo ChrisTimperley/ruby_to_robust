@@ -87,7 +87,7 @@ module RubyToRobust::Global
   def self.repair(method, params, error)
 
     # Produce a series of candidate fixes to the method.
-    # WOULD BE MUCH FASTER IF THIS WAS ORDERED!
+    # WOULD BE *POTENTIALLY* FASTER IF THIS WAS ORDERED!
     candidates = []
 
     # Attempt each of the candidate fixes until the error is prevented or there are no
