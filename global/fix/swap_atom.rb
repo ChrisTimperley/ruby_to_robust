@@ -7,7 +7,7 @@ class Wallace::Global::Fix::SwapAtom < Wallace::Global::Fix::Atom
   # * line_no, the line in the source code which the atom should operate on.
   # * replacement, the contents of the replacement line.
   def initialize(line_no, replacement)
-    @line_no = line_no
+    super(line_no)
     @replacement = replacement
   end
 
