@@ -244,7 +244,7 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
   def generate_candidates(method, error)
   
     # Ensure that the error is a ZeroDivisionError.
-    return [] unless error.exception.is_a? ZeroDivisionError
+    return [] unless error.is_a? ZeroDivisionError
     
     # Extract the contents of the line that the exception occured on.
     line_no = error.line_no(method.name) # <--- NEED TO PORT THIS OPERATION!
