@@ -1,9 +1,57 @@
 # Handles zero division errors.
 class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Global::Strategy
 
+  # Wraps all method calls in a safety barrier, preventing them from raising
+  # a ZeroDivisionError and instead causing them to return zero when a ZeroDivisionError
+  # is thrown.
+  #
+  # *Parameters:*
+  # * line, the line to wrap the method calls for.
+  #
+  # *Returns:*
+  # The provided line with all method calls wrapped.
+  def self.wrap_calls(line)
+    
+    # Extract all the method calls in the line.
+    calls = extract_calls(line)
+    
+    # Wrap each of the method calls in the original string.
+    calls.each_index do |x|
+    
+      # Retrieve the co-ordinates of the call.
+      start_at, end_at = calls[x]
+    
+      # Transform the method call.
+      line.insert start_at, "RubyToRobust::Global.prevent_dbz{"
+      line.insert end_at+19, "}"
+      
+      # Modify the coordinates of all other method calls.
+      (x...calls.length).each do |y|
+      
+        # If this method ends before another begins, shift
+        # both the start and end of that method.
+        if end_at < calls[y][0]
+          calls[y][0] += 19
+          calls[y][1] += 19
+        
+        # If this X starts after Y but finishes before, then shift
+        # the end of Y by 13.
+        elsif start_at > calls[y][0] and end_at < calls[y][1]
+          calls[y][1] += 19
+        end
+        
+      end
+      
+    end
+    
+    # Return the transformed line.
+    return line
+    
+  end
+
   # Wraps all inline division operators in a safety barrier, preventing them from raising
-  # a ZeroDivisionError and instead causing them to return zero when zero is used as the
-  # denominator.
+  # a ZeroDivisionError and instead causing them to return zero when a ZeroDivisionError
+  # is thrown.
   #
   # *Parameters:*
   # * line, the line to wrap the inline division operators for.
