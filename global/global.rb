@@ -112,4 +112,22 @@ module RubyToRobust::Global
 
   end
 
+  # Executes a given block whilst preventing a ZeroDivisionError occurring.
+  # If a zero division error does occur during the execution of the block, this safety
+  # wrapper will catch the exception and will return a zero instead, allowing the program
+  # to continue.
+  #
+  # *Parameters:*
+  # * &block, the block to execute under ZeroDivisionError protection.
+  #
+  # *Returns:*
+  # The result of the block execution, or zero if the block execution yields a ZeroDivisionError.
+  def self.prevent_dbz(&block)
+    begin
+      return &block.call
+    rescue ZeroDivisionError
+      return 0
+    end
+  end
+
 end
