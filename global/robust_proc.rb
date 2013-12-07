@@ -3,7 +3,8 @@
 class RubyToRobust::Global::RobustProc
 
   attr_reader :headers,
-              :body
+              :body,
+              :source
 
   # Constructs a new Robust procedure.
   #
@@ -11,15 +12,16 @@ class RubyToRobust::Global::RobustProc
   # * headers, the arguments to the procedure (as an array of argument names).
   # * body, the body of the procedure.
   def initialize(headers, body)
-    @headers = headers
-    @body = body
+    @headers = headers.freeze
+    @body = body.freeze
 
     # Dynamically create the procedure as the "call" method of this object,
     # and supply file and line debugging information.
-    instance_eval("def call(#{@headers.join(', ')})
+    @source = "def call(#{@headers.join(', ')})
   #{body}
-end", 'ROBUST_PROC', 0)
-
+end"
+    instance_eval(@source, 'ROBUST_PROC', 0)
+    @source = @source.lines.freeze
   end
 
 end
