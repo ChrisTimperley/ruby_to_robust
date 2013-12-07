@@ -231,4 +231,40 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
 
   end
 
+  # Finds all method calls and division operators that could yield a ZeroDivisionError
+  # on the line where the error occurred and prevents them from doing so again by
+  # wrapping them in a DbZ exception catcher.
+  #
+  # *Parameters:*
+  # * method, the method which encountered the error.
+  # * error, the error which occurred.
+  #
+  # *Returns:*
+  # A list of candidate solutions to fix the root of the error affecting the method.
+  def generate_candidates(method, error)
+  
+    # Ensure that the error is a ZeroDivisionError.
+    return [] unless error.exception.is_a? ZeroDivisionError
+    
+    # Extract the contents of the line that the exception occured on.
+    line_no = error.line_no(method.name) # <--- NEED TO PORT THIS OPERATION!
+    line_contents = method.source[line_no]
+    
+    # We validate the fix by ensuring that any further errors are not
+    # ZeroDivisionError exceptions thrown on this line.
+    validator = lambda do |e|
+      return (not (e.is_a? ZeroDivisionError and e.line_no(fname) == line_no))
+    end
+    
+    # Compose the sole candidate fix for this error.
+    line_contents = self.class.wrap_ops(self.class.wrap_calls(line_contents))
+    return [
+      RubyToRobust::Global::Fix.new(
+        [Wallace::Global::Fix::SwapAtom.new(line_no, line_contents))],
+        validator
+      )
+    ]
+  
+  end
+
 end
