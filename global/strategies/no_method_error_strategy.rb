@@ -1,4 +1,7 @@
-# Handles NoMethodError exceptions by 
+require 'levenshtein'
+
+# Handles NoMethodError exceptions by mapping missing method calls to valid replacement methods within
+# the same module/class whose name is within a given Levenshtein distance of the missing method name.
 class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Global::Strategy
 
   attr_accessor :max_distance
@@ -9,11 +12,6 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
   # * max_distance, the maximum allowed distance between an attempted and candidate method call.
   def initialize(max_distance = 5)
     @max_distance = max_distance
-  end
-
-  # Calculates the Levenshtein distance from X to Y.
-  def distance(x, y)
-    raise NotImplementedError
   end
 
   # Used to fix NoMethodError exceptions by replacing calls to missing methods with calls to
@@ -59,7 +57,7 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     # that their levenshtein distance can be less or equal to the maximum distance).
     candidates = missing_method_owner.public_instance_methods
     candidates.reject!{|c| (c.length - missing_method_name.length).abs > @max_distance}
-    candidates.map!{|c| [c.to_s, distance(missing_method_name, c.to_s)]}
+    candidates.map!{|c| [c.to_s, Levenshtein.distance(missing_method_name, c.to_s)]}
     
     # Only keep candidates whose distance with the missing
     # method is less or equal to the threshold. Order the remaining candidates
