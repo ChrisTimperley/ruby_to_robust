@@ -49,16 +49,21 @@ class RubyToRobust::Global::Fix
   # *Returns*
   # A variant of the affected method modified according to the changes given by this fix.
   def apply(method)
-    
-    # Should the source include the method header or just the body?
-    fixed_source(method.to_source)
-
+    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.body))
   end
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*
   # to determine whether the fix has been successful in removing the source of the original error.
   # A "fixed" method in this sense is not necessarily one which removes all errors from a given method,
   # rather it removes a particular identifiable error.
+  #
+  # *Parameters:*
+  # * method, the affected method.
+  # * original_error, the original error that was encountered by the method.
+  # * new_error, the error encountered after applying this fix and executing the method again.
+  #
+  # *Returns:*
+  # * True if the fix was successful in removing the cause of the original error, false if not.
   def successful?(method, original_error, new_error)
     @validator[method, original_error, new_error]
   end
