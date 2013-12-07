@@ -23,16 +23,28 @@ module RubyToRobust::Global
   def self.execute(method, params)
 
     # Attempt to execute the method. If an error occurs then attempt to repair the method
-    # using the error information. Once repaired attempt to call the method again, repeating
-    # the cycle, until either the method successfully returns a result or a maximum number of
-    # errors occur.
-    until REPAIR_LIMIT
-      begin
-        return method.call(*params)
-      rescue => error
-        method = repair(method, params, error)
-      end
+    # using the error information.
+    begin
+      return method.call(*params)
+    rescue => original_error
+      report = repair(method, params, original_error)
     end
+
+    # Once repaired attempt to call the method again, repeating the cycle,
+    # until either the method successfully returns a result or a maximum number of errors occur.
+    until REPAIR_LIMIT or report.complete?
+      return report.result if report.complete?
+      report = repair(report.method, params, report.error)
+    end
+
+    # If the repair limit has been hit then return the original error and make no permanent
+    # changes to the supplied method (or should we keep the changes?).
+    raise original_error if report.partial?
+
+    # If the method was completely repaired then swap the original method with the fixed form
+    # (so long as that functionality is enabled) and return the result of the method call.
+    method.become(report.fixed_method) if KEEP_FIX?
+    return report.result
 
   end
 
