@@ -1,3 +1,5 @@
+require_relative 'patches/init.rb'
+
 require_relative 'global.rb'
 require_relative 'robust_proc.rb'
 
