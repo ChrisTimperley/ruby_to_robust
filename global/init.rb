@@ -8,3 +8,5 @@ require_relative 'strategies/init.rb'
 
 require_relative 'fix.rb'
 require_relative 'fix/init.rb'
+
+require_relative 'report.rb'
