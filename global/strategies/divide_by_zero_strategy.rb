@@ -252,11 +252,8 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
     
     # We validate the fix by ensuring that any further errors are not
     # ZeroDivisionError exceptions thrown on this line.
-    #
-    # THIS IS NOT THE CURRENT FORMAT!!!
-    # Should be: |method, current_error, original_error|
-    validator = lambda do |e|
-      return (not (e.is_a? ZeroDivisionError and e.line_no(fname) == line_no))
+    validator = lambda do |method, new_error, old_error|
+      return (not (new_error.is_a? ZeroDivisionError and old_error.line_no(method.name) == new_error.line_no(method.name)))
     end
     
     # Compose the sole candidate fix for this error.
