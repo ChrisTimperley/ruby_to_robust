@@ -12,27 +12,15 @@
 # Author: Chris Timperley
 module RubyToRobust::Global
 
-  # Optimism setting could be used to attempt to execute the program before
-  # converting it to a static method (would save a lot of time!).
-  class << self
-    attr_accessor :optimistic
-  end
-
   # Executes a given method (or proc) under global robustness protection.
   #
   # *Parameters:*
-  # * method, the method to execute using global robustness protection.
+  # * method, the (robust proc) method to execute using global robustness protection.
   # * params, the parameters to the method call.
   #
   # *Returns:*
   # The result of the method call.
   def self.execute(method, params)
-
-    # Convert the provided method to a statically defined method if it isn't one already.
-    # This allows us to probe line information from exceptions thrown within the method.
-    # If the method is already statically defined, then we create and operate on a copy of
-    # the method so that changes are localised to the method call.
-    method = method.to_static
 
     # Attempt to execute the method. If an error occurs then attempt to repair the method
     # using the error information. Once repaired attempt to call the method again, repeating
