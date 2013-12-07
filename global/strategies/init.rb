@@ -1,2 +1,3 @@
 require_relative 'divide_by_zero_strategy.rb'
 require_relative 'no_method_error_strategy.rb'
+require_relative 'wrong_arguments_strategy.rb'
