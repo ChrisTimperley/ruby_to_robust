@@ -12,12 +12,27 @@
 # Author: Chris Timperley
 module RubyToRobust::Global
 
-  # Allow strategies to be added and removed via:
-  # Global.strategies << Strategy.new
-  # Global.strategies.remove(strategy)
   @strategies = []
+  @max_attempts = 10
+  @save_repairs = true
+
   class << self
+
+    # A flag to control whether repairs to a method should be permanent (true) or if they
+    # should last only for a given call (false).
+    # True by default.
+    attr_accessor :save_repairs
+
+    # The maximum number of (different) errors that will be tolerated before
+    # all attempts to repair the method are ceased.
+    # 10 by default.
+    attr_accessor :max_attempts
+
+    # Allow strategies to be added and removed via:
+    # * Global.strategies << Strategy.new
+    # * Global.strategies.remove(strategy)
     attr_reader :strategies
+
   end
 
   # Executes a given method (or proc) under global robustness protection.
@@ -32,16 +47,18 @@ module RubyToRobust::Global
 
     # Attempt to execute the method. If an error occurs then attempt to repair the method
     # using the error information.
+    attempts = 0
     begin
       return method.call(*params.clone)
     rescue => original_error
       report = repair(method, params, original_error)
+      attempts += 1
     end
 
     # Once repaired attempt to call the method again, repeating the cycle,
     # until either the method successfully returns a result or a maximum number of errors occur.
-    until REPAIR_LIMIT or report.complete?
-      return report.result if report.complete?
+    until attempts >= @max_attempts or report.complete?
+      attempts += 1
       report = repair(report.method, params, report.error)
     end
 
@@ -51,7 +68,7 @@ module RubyToRobust::Global
 
     # If the method was completely repaired then swap the original method with the fixed form
     # (so long as that functionality is enabled) and return the result of the method call.
-    method.become(report.fixed_method) if KEEP_FIX?
+    method.become(report.fixed_method) if @save_repair
     return report.result
 
   end
