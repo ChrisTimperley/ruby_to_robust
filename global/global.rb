@@ -12,6 +12,14 @@
 # Author: Chris Timperley
 module RubyToRobust::Global
 
+  # Allow strategies to be added and removed via:
+  # Global.strategies << Strategy.new
+  # Global.strategies.remove(strategy)
+  @strategies = []
+  class << self
+    attr_reader :strategies
+  end
+
   # Executes a given method (or proc) under global robustness protection.
   #
   # *Parameters:*
@@ -25,7 +33,7 @@ module RubyToRobust::Global
     # Attempt to execute the method. If an error occurs then attempt to repair the method
     # using the error information.
     begin
-      return method.call(*params)
+      return method.call(*params.clone)
     rescue => original_error
       report = repair(method, params, original_error)
     end
@@ -95,13 +103,13 @@ module RubyToRobust::Global
     until candidates.empty?
 
       fix = candidates.shift
-      fix_method = fix.apply(method)
+      fixed_method = fix.apply(method)
 
       begin
-        fix_method.call(*params.clone)
-        return fix_method
+        result = fixed_method.call(*params.clone)
+        return Report.new(fixed_method, result: result)
       rescue => fix_error
-        return fix if fix.successful?(error, fix_error)
+        return Report.new(fixed_method, error: fix_error) if fix.successful?(error, fix_error)
       end
 
     end
