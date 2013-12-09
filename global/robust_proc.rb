@@ -12,6 +12,7 @@ class RubyToRobust::Global::RobustProc
   # * headers, the arguments to the procedure (as an array of argument names).
   # * body, the body of the procedure.
   def initialize(headers, body)
+    
     @headers = headers.freeze
     @body = body.freeze
 
@@ -20,8 +21,13 @@ class RubyToRobust::Global::RobustProc
     @source = "def call(#{@headers.join(', ')})
   #{body}
 end"
+
     instance_eval(@source, code, 0)
-    @source = @source.lines.freeze
+
+    # Store the lines of the body in the source property as an array (using chomp
+    # to remove /n from the end of each line).
+    @source = @source.lines.map(&:chomp).freeze
+
   end
 
   # Every robust procedure has its own unique code that is used as its source
