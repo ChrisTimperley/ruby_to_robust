@@ -58,6 +58,7 @@ module RubyToRobust::Global
     # Once repaired attempt to call the method again, repeating the cycle,
     # until either the method successfully returns a result or a maximum number of errors occur.
     until attempts >= @max_attempts or report.complete?
+      puts report.inspect
       attempts += 1
       report = repair(report.method, params, report.error)
     end
@@ -112,7 +113,6 @@ module RubyToRobust::Global
   def self.repair(method, params, error)
 
     # Produce a series of candidate fixes to the method.
-    # WOULD BE *POTENTIALLY* FASTER IF THIS WAS ORDERED!
     candidates = generate_candidates(method, error)
 
     # Attempt each of the candidate fixes until the error is prevented or there are no
