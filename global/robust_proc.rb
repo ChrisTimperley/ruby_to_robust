@@ -20,8 +20,14 @@ class RubyToRobust::Global::RobustProc
     @source = "def call(#{@headers.join(', ')})
   #{body}
 end"
-    instance_eval(@source, 'ROBUST_PROC', 0)
+    instance_eval(@source, code, 0)
     @source = @source.lines.freeze
+  end
+
+  # Every robust procedure has its own unique code that is used as its source
+  # file and is used to identify error information specific to it.
+  def code
+    "ROBUST_PROC_#{object_id}"
   end
 
 end
