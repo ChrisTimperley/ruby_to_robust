@@ -2,7 +2,7 @@
 # arguments being supplied to a method. Trims or pads the list of arguments so that the number
 # of arguments is equal to the arity of the method (i.e. the number of provided arguments
 # matches the expected number of arguments).
-class RubyToRobust::Global::Strategies::WrongArgumentsStrategy < RubyToRobust::Global::Strategy
+class RubyToRobust::Global::Strategies::WrongArgumentsErrorStrategy < RubyToRobust::Global::Strategy
 
   # Fixes all calls to a given method on a provided line such that they all use
   # an expected number of arguments. Method calls with too few parameters are padded with zeroes,
@@ -141,7 +141,7 @@ class RubyToRobust::Global::Strategies::WrongArgumentsStrategy < RubyToRobust::G
 
     # Ensure that the error is a ArgumentError caused by an incorrect number
     # of arguments being supplied to a method.
-    return [] unless error.exception.is_a? ArgumentError and error.message.include? 'wrong number of arguments'
+    return [] unless error.is_a? ArgumentError and error.include? 'wrong number of arguments'
     
     # Extract details of the error.
     affected_method = error.affected_method
@@ -164,7 +164,7 @@ class RubyToRobust::Global::Strategies::WrongArgumentsStrategy < RubyToRobust::G
     line_contents = self.class.fix_calls(affected_method, args_expected, line_contents)
     return [
       RubyToRobust::Global::Fix.new(
-        [Wallace::Global::Fix::SwapAtom.new(line_no, line_contents))],
+        [Wallace::Global::Fix::SwapAtom.new(line_no, line_contents)],
         validator
       )
     ]
