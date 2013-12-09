@@ -20,7 +20,7 @@ class RubyToRobust::Global::Fix
   # *Parameters:*
   # * changes, an array of changes that the fix should make to the source code.
   # * validator, a lambda function that verifies a given error is not the same as the original error.
-  def initialize(changes, &validator)
+  def initialize(changes,validator)
     @changes = changes
     @validator = validator
   end
@@ -28,7 +28,7 @@ class RubyToRobust::Global::Fix
   # Calculates the source code of the fixed method using the atomic fixes described by this object.
   #
   # *Parameters:*
-  # * src, the original source code of the affected method.
+  # * src, the original source code (as lines) of the affected method.
   #
   # *Returns:*
   # The fixed source code for the method.
@@ -49,7 +49,7 @@ class RubyToRobust::Global::Fix
   # *Returns*
   # A variant of the affected method modified according to the changes given by this fix.
   def apply(method)
-    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.body))
+    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.source.dup)[1...-1].join('/\n/)'))
   end
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*

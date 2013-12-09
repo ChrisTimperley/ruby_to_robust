@@ -19,11 +19,12 @@ class RubyToRobust::Global::Fix::Atom
   end
 
   # Calculate the line number in the adjusted source code that corresponds to the specified
-  # line in the original source code.
+  # line in the body of the original source code.
   #
   # *Parameters:*
   # * changes, an array of the atomic changes already applied to this source.
   def adjusted_line_no(changes)
+    
     adj_n = @line_no
     changes.each do |c|
       if c.line_no < @line_no and lines_added < 0
@@ -32,7 +33,10 @@ class RubyToRobust::Global::Fix::Atom
         adj_n += c.lines_added
       end
     end
-    return adj_n
+
+    # Subtract one to return the line number in the body (header takes up the first line).
+    return adj_n - 1
+
   end
 
   # Destructively applies the change described by this atomic fix to the given source code.
