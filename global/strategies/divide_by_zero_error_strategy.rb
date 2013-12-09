@@ -23,7 +23,7 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
     
       # Transform the method call.
       line.insert start_at, "RubyToRobust::Global.prevent_dbz{"
-      line.insert end_at+19, "}"
+      line.insert end_at+34, "}"
       
       # Modify the coordinates of all other method calls.
       (x...calls.length).each do |y|
@@ -31,13 +31,13 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
         # If this method ends before another begins, shift
         # both the start and end of that method.
         if end_at < calls[y][0]
-          calls[y][0] += 19
-          calls[y][1] += 19
+          calls[y][0] += 34
+          calls[y][1] += 34
         
         # If this X starts after Y but finishes before, then shift
         # the end of Y by 13.
         elsif start_at > calls[y][0] and end_at < calls[y][1]
-          calls[y][1] += 19
+          calls[y][1] += 34
         end
         
       end
@@ -196,30 +196,37 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
     
       # Retrieve the co-ordinates of the operation.
       start_at, end_at = operations[x]
-    
+
       # Wrap the operation
       line.insert start_at, "(RubyToRobust::Global.prevent_dbz{"
-      line.insert end_at+20, "})"
+      line.insert end_at+35, "})"
       
       # Modify the coordinates of all other method calls.
+      #
+      #
+      #
+      # SURELY THIS SHOULD BE X+1?
+      #
+      #
+      #
       (x...operations.length).each do |y|
       
         # If this operation ends before another begins, shift
         # both the start and end of that operation.
         if end_at < operations[y][0]
-          operations[y][0] += 21
-          operations[y][1] += 21
+          operations[y][0] += 36
+          operations[y][1] += 36
         
         # If this X starts after Y but finishes before, then shift
         # the end of Y.
         elsif start_at > operations[y][0] and end_at < operations[y][1]
-          operations[y][1] += 21
+          operations[y][1] += 36
         
         # If this Y is within X, shift the start and end of Y by the
         # size of the prevention call opening.
         elsif start_at < operations[y][0] and end_at > operations[y][1]
-          operations[y][0] += 19
-          operations[y][1] += 19
+          operations[y][0] += 34
+          operations[y][1] += 34
         end
         
       end
@@ -247,20 +254,20 @@ class RubyToRobust::Global::Strategies::DivideByZeroStrategy < RubyToRobust::Glo
     return [] unless error.is_a? ZeroDivisionError
     
     # Extract the contents of the line that the exception occured on.
-    line_no = error.line_no(method.name) # <--- NEED TO PORT THIS OPERATION!
+    line_no = error.line_no(method)
     line_contents = method.source[line_no]
     
     # We validate the fix by ensuring that any further errors are not
     # ZeroDivisionError exceptions thrown on this line.
     validator = lambda do |method, new_error, old_error|
-      return (not (new_error.is_a? ZeroDivisionError and old_error.line_no(method.name) == new_error.line_no(method.name)))
+      not (new_error.is_a? ZeroDivisionError and old_error.line_no(method) == new_error.line_no(method))
     end
     
     # Compose the sole candidate fix for this error.
     line_contents = self.class.wrap_ops(self.class.wrap_calls(line_contents))
     return [
       RubyToRobust::Global::Fix.new(
-        [Wallace::Global::Fix::SwapAtom.new(line_no, line_contents))],
+        [RubyToRobust::Global::Fix::SwapAtom.new(line_no, line_contents)],
         validator
       )
     ]
