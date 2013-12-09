@@ -149,7 +149,7 @@ module RubyToRobust::Global
   # The result of the block execution, or zero if the block execution yields a ZeroDivisionError.
   def self.prevent_dbz(&block)
     begin
-      return &block.call
+      return block.call
     rescue ZeroDivisionError
       return 0
     end

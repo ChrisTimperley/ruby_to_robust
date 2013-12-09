@@ -1,5 +1,5 @@
 # A remove atom is used to swap a line from the affected source code with another.
-class Wallace::Global::Fix::SwapAtom < Wallace::Global::Fix::Atom
+class RubyToRobust::Global::Fix::SwapAtom < RubyToRobust::Global::Fix::Atom
 
   # Constructs a new swap atom.
   #

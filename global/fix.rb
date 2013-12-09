@@ -67,6 +67,6 @@ class RubyToRobust::Global::Fix
   def successful?(method, original_error, new_error)
     @validator[method, original_error, new_error]
   end
-  alias_method :validate :successful?
+  alias_method :validate, :successful?
 
 end

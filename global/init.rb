@@ -1,3 +1,5 @@
+module RubyToRobust; end
+
 require_relative 'patches/init.rb'
 
 require_relative 'global.rb'

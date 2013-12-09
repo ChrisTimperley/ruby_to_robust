@@ -1,5 +1,5 @@
 # A add atom is used to insert a sequence of lines at a given position in the affected source code.
-class Wallace::Global::Fix::AddAtom < Wallace::Global::Fix::Atom
+class RubyToRobust::Global::Fix::AddAtom < RubyToRobust::Global::Fix::Atom
 
   # Constructs a new add atom.
   #
