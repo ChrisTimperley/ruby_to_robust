@@ -26,7 +26,7 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
   def generate_candidates(method, error)
 
     # Ensure that the error is a NoMethodError.
-    return [] if error.is_a? NoMethodError
+    return [] unless error.is_a? NoMethodError
 
     # Retrieve details of the missing method and the contents of the line that the error
     # occurred on.
@@ -77,7 +77,7 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     return candidates.map! do |c|
       fixed_line = line_contents.gsub(/(\(|^|::|\.|\s|,)#{missing_method_name}\(/) {|s| s[missing_method_name] = c; s}
       RubyToRobust::Global::Fix.new(
-        [Wallace::Global::Fix::SwapAtom.new(line_no, fixed_line))],
+        [Wallace::Global::Fix::SwapAtom.new(line_no, fixed_line)],
         validator
       )
     end
