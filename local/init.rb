@@ -1,7 +1,7 @@
 require_relative 'kernel/init.rb'
 
 require_relative 'local.rb'
-require_relative 'patch.rb'
 
-# Load the patches.
-Dir[File.dirname(__FILE__) + '/patches/*.rb'].each { |file| require file }
+# Load all the strategies.
+require_relative 'strategy.rb'
+require_relative 'strategy/init.rb'

@@ -1,3 +1,5 @@
+module RubyToRobust::Local::Strategies; end
+
 require_relative 'bignum.rb'
 require_relative 'fixnum.rb'
 require_relative 'float.rb'
