@@ -55,7 +55,12 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     # distance to candidates, throw away any candidates whose difference in length with
     # the requested method is greater than the maximum distance (since it is impossible
     # that their levenshtein distance can be less or equal to the maximum distance).
-    candidates = missing_method_owner.public_instance_methods
+    if missing_method_owner_type == 'Module'
+      candidates = missing_method_owner.singleton_class.public_instance_methods(false)
+    else
+      candidates = missing_method_owner.public_instance_methods(false)
+    end
+
     candidates.reject!{|c| (c.length - missing_method_name.length).abs > @max_distance}
     candidates.map!{|c| [c.to_s, Levenshtein.distance(missing_method_name, c.to_s)]}
     
@@ -77,7 +82,7 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     return candidates.map! do |c|
       fixed_line = line_contents.gsub(/(\(|^|::|\.|\s|,)#{missing_method_name}\(/) {|s| s[missing_method_name] = c; s}
       RubyToRobust::Global::Fix.new(
-        [Wallace::Global::Fix::SwapAtom.new(line_no, fixed_line)],
+        [RubyToRobust::Global::Fix::SwapAtom.new(line_no, fixed_line)],
         validator
       )
     end

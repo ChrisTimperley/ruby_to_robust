@@ -126,7 +126,7 @@ module RubyToRobust::Global
         result = fixed_method.call(*params.clone)
         return Report.new(fixed_method, result: result)
       rescue => fix_error
-        return Report.new(fixed_method, error: fix_error) if fix.successful?(error, fix_error)
+        return Report.new(fixed_method, error: fix_error) if fix.successful?(fixed_method, error, fix_error)
       end
 
     end

@@ -49,7 +49,7 @@ class RubyToRobust::Global::Fix
   # *Returns*
   # A variant of the affected method modified according to the changes given by this fix.
   def apply(method)
-    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.source.dup)[1...-1].join('/\n/)'))
+    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.source.dup[1...-1]).join('/\n/)'))
   end
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*
