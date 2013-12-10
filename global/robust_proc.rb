@@ -36,4 +36,13 @@ end"
     "ROBUST_PROC_#{object_id}"
   end
 
+  # Makes this robust procedure object take on the function of another
+  # robust procedure. This allows repairs to be optionally saved.
+  def become(other)
+    @headers = other.headers
+    @body = other.body
+    @source = other.source
+    instance_eval(@source.join("\n"), code, 0)
+  end
+
 end

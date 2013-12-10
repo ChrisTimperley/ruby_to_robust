@@ -6,4 +6,8 @@ RubyToRobust::Global.strategies << RubyToRobust::Global::Strategies::DivideByZer
 RubyToRobust::Global.strategies << RubyToRobust::Global::Strategies::NoMethodErrorStrategy.new
 RubyToRobust::Global.strategies << RubyToRobust::Global::Strategies::WrongArgumentsErrorStrategy.new
 
-puts "Result: #{RubyToRobust::Global.execute(test_func, [0, 1])}"
+r1 = RubyToRobust::Global.execute(test_func, [10, 44])
+r2 = RubyToRobust::Global.execute(test_func, [89, 21])
+
+puts "Result: #{r1}"
+puts "Result: #{r2}"

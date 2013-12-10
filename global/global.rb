@@ -69,7 +69,7 @@ module RubyToRobust::Global
 
     # If the method was completely repaired then swap the original method with the fixed form
     # (so long as that functionality is enabled) and return the result of the method call.
-    method.become(report.fixed_method) if @save_repair
+    method.become(report.fixed_method) if @save_repairs
     return report.result
 
   end
