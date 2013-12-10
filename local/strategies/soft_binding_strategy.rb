@@ -26,13 +26,13 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
   end
 
   # Caches the list of contexts for later use.
-  def prepare(contexts)
+  def prepare!(contexts)
     @contexts = contexts
   end
 
   # Hides all methods attached to each context (by prepending their names with "__" and making
   # them private) before attaching a method missing handler to each of the contexts.
-  def enable
+  def enable!
     @contexts.each do |c|
       c.hide_methods!
       c.send(:define_method, :method_missing) do |method_name, *args, &block|
@@ -96,7 +96,7 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
 
   # Restores all the hidden methods to their previous state and removes the method missing
   # handler from each associated context.
-  def disable
+  def disable!
     @contexts.each do |c|
       c.unhide_methods!
       c.send(:undef_method, :method_missing)

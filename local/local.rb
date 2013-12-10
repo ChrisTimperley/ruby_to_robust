@@ -25,13 +25,13 @@ module RubyToRobust::Local
   # *Returns:*
   # * The result of the block execution.
   def self.protected(*contexts, &block)
-    patches.each { |p| p.prepare(contexts) }
-    patches.each { |p| p.enable }
+    patches.each { |p| p.prepare!(contexts) }
+    patches.each { |p| p.enable! }
     
     begin
       result = block.call
     ensure
-      patches.each { |p| p.disable }
+      patches.each { |p| p.disable! }
     end
 
     return result

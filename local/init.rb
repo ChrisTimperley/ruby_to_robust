@@ -1,3 +1,5 @@
+module RubyToRobust; end
+
 require_relative 'kernel/init.rb'
 
 require_relative 'local.rb'
