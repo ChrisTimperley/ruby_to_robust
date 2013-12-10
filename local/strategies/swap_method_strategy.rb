@@ -9,8 +9,8 @@ class RubyToRobust::Local::Strategies::SwapMethodStrategy < RubyToRobust::Local:
   # * binding, the class or module of the method that should be patched.
   # * name, the name of the method to be patched.
   # * backup, the name to store the old method under.
-  # * replacement, the replacement method itself.
-  def initialize(binding, name, backup, replacement)
+  # * &replacement, the replacement method itself.
+  def initialize(binding, name, backup, &replacement)
     @binding = binding
     @name = name
     @backup = backup
