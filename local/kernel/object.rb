@@ -1,28 +1,43 @@
 class Object
 
-  # Returns the meta-class of this object.
-  def metaclass
-    class << self; self; end
-  end
+  # Hides all public instance methods specific to this class by prepending their names
+  # with "__" and making them private.
+  def hide_methods!
+    public_instance_methods(false).each do |original|
 
-  # Removes all the (non-inherited/instance) methods from this context/object and
-  # stores them inside a private method look-up table, indexed by the string form
-  # of their name. 
-  def collapse_methods!
-    @__methods = Hash[instance_methods.map{ |name|
-      m = method(name)
-      metaclass.send(:remove_method, name)
-      [name.to_s, m]
-    }]
-  end
+      # Ignore method missing.
+      next if original == :method_missing
 
-  # Restores each method in the private method look-up table as an instance method
-  # before clearing the contents of the look-up table.
-  def restore_methods!
-    @__methods.each_pair do |name, m|
-      metaclass.send(:define_method, name, m)
+      # Prepend "__" to the method name and make it private.
+      hidden = ('__' + sym.to_s).to_sym
+      alias_method :hidden :original
+      private :hidden
+
     end
-    @__methods.clear
+  end
+
+  # Unhides all previously hidden methods, restoring the object/class/module to its
+  # original state.
+  def unhide_methods!
+    hidden_method_symbols.each do |sym|
+      original = sym.to_s[2..-1].to_sym
+      alias_method :original :sym
+      remove_method :sym
+      public :original
+    end
+  end
+
+  # Returns a hash of the hidden methods of this object (indexed by the original name
+  # of the methods, as strings).
+  def hidden_methods
+    Hash[hidden_method_symbols.map { |sym| [sym.to_s[2..-1], method(sym)] }]
+  end
+
+  private
+
+  # Returns an array of the symbols for each of the hidden methods (including their "__").
+  def hidden_method_symbols
+    private_instance_methods(false).select { |m| m.start_with? '__' }
   end
 
 end

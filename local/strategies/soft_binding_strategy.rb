@@ -99,7 +99,7 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
   def disable!
     @contexts.each do |c|
       c.unhide_methods!
-      c.send(:undef_method, :method_missing)
+      c.send(:remove_method, :method_missing)
     end
   end
 
