@@ -13,12 +13,8 @@
 # Author: Chris Timperley
 module RubyToRobust::Local
 
-  # List of patches.
-  @patches = []
-
-  def self.setup()
-
-  end
+  # List of strategies.
+  @strategies = []
 
   # Executes a given block under local robustness protection.
   #
