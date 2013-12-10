@@ -1,3 +1,5 @@
+require_relative 'kernel/init.rb'
+
 require_relative 'local.rb'
 require_relative 'patch.rb'
 
