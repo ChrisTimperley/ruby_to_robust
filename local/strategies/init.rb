@@ -14,3 +14,5 @@ require_relative 'fixnum_coerce_strategy.rb'
 
 require_relative 'float_division_strategy.rb'
 require_relative 'float_modulus_strategy.rb'
+
+require_relative 'soft_binding_strategy.rb'

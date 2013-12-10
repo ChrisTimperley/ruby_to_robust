@@ -1,4 +1,4 @@
-require_relative '../../init.rb'
+require_relative '../local/init.rb'
 require 'test/unit'
 
 module TestMethods
