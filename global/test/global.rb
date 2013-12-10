@@ -16,7 +16,7 @@ module TestFunctions
 
 end
 
-test_func = "TestFunctions.ad(x, y)"
+test_func = "TestFunctions.mu(x, y, 10, 20, 30)"
 test_func = RubyToRobust::Global::RobustProc.new(['x', 'y'], test_func)
 
 RubyToRobust::Global.strategies << RubyToRobust::Global::Strategies::DivideByZeroStrategy.new

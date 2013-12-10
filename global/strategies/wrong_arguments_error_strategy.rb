@@ -141,8 +141,8 @@ class RubyToRobust::Global::Strategies::WrongArgumentsErrorStrategy < RubyToRobu
 
     # Ensure that the error is a ArgumentError caused by an incorrect number
     # of arguments being supplied to a method.
-    return [] unless error.is_a? ArgumentError and error.include? 'wrong number of arguments'
-    
+    return [] unless error.is_a? ArgumentError and error.message.include? 'wrong number of arguments'
+
     # Extract details of the error.
     affected_method = error.affected_method
     args_expected = error.args_expected
@@ -152,7 +152,7 @@ class RubyToRobust::Global::Strategies::WrongArgumentsErrorStrategy < RubyToRobu
     # We validate the fix by ensuring that any further errors are not
     # ArgumentErrors for the incorrect number of arguments on the same
     # method and on the same line.
-    validator = lambda do |method, new_error, old_error|
+    validator = lambda do |method, old_error, new_error|
       return true unless new_error.is_a? ArgumentError
       return true unless new_error.message.include? 'wrong number of arguments'
       return true unless new_error.line_no == old_error.line_no
@@ -164,7 +164,7 @@ class RubyToRobust::Global::Strategies::WrongArgumentsErrorStrategy < RubyToRobu
     line_contents = self.class.fix_calls(affected_method, args_expected, line_contents)
     return [
       RubyToRobust::Global::Fix.new(
-        [Wallace::Global::Fix::SwapAtom.new(line_no, line_contents)],
+        [RubyToRobust::Global::Fix::SwapAtom.new(line_no, line_contents)],
         validator
       )
     ]

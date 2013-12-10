@@ -73,7 +73,7 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     
     # We validate the exception by ensuring that any further exceptions aren't
     # NoMethodError exceptions for the fixed method on the fixed line.
-    validator = lambda do |method, new_error, old_error|
+    validator = lambda do |method, old_error, new_error|
       return (not (new_error.is_a? NoMethodError and new_error.method_name == old_error.method_name and new_error.line_no == old_error.line_no))
     end
 

@@ -58,9 +58,8 @@ module RubyToRobust::Global
     # Once repaired attempt to call the method again, repeating the cycle,
     # until either the method successfully returns a result or a maximum number of errors occur.
     until attempts >= @max_attempts or report.complete?
-      puts report.inspect
       attempts += 1
-      report = repair(report.method, params, report.error)
+      report = repair(report.fixed_method, params, report.error)
     end
 
     # If the repair limit has been hit then return the original error and make no permanent

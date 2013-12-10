@@ -16,7 +16,7 @@ class ArgumentError
   # Returns the line number that the method call was made from.
   # The line that the method call was made is given by the second line of the backtrace.
   def line_no
-    backtrace[1][/:(\d+):/][1...-1].to_i - 1
+    backtrace[1][/:(\d+):/][1...-1].to_i
   end
 
 end
