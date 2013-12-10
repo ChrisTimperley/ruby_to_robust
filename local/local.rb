@@ -16,6 +16,10 @@ module RubyToRobust::Local
   # List of patches.
   @patches = []
 
+  def self.setup()
+
+  end
+
   # Executes a given block under local robustness protection.
   #
   # *Parameters:*

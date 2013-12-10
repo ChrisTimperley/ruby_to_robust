@@ -3,6 +3,8 @@
 # These strategies are used to implement "softer" semantics in the program.
 class RubyToRobust::Local::Strategy
 
+  abstract_class
+
   # Prepares this strategy.
   #
   # *Parameters:*
