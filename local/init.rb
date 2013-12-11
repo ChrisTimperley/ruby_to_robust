@@ -1,5 +1,7 @@
 module RubyToRobust; end
 
+require 'levenshtein'
+
 require_relative 'kernel/init.rb'
 
 require_relative 'local.rb'
