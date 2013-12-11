@@ -3,8 +3,6 @@
 # an alternative which utilises soft semantics.
 class RubyToRobust::Local::Strategies::SwapMethodStrategy < RubyToRobust::Local::Strategy
 
-  abstract_class
-
   # Constructs a new swap method strategy.
   #
   # *Parameters:*

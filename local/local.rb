@@ -15,6 +15,9 @@ module RubyToRobust::Local
 
   # List of strategies.
   @strategies = []
+  class << self
+    attr_reader :strategies
+  end
 
   # Executes a given block under local robustness protection.
   #

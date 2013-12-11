@@ -10,7 +10,7 @@ class Object
 
       # Prepend "__" to the method name and make it private.
       hidden = ('__' + sym.to_s).to_sym
-      alias_method :hidden :original
+      alias_method :hidden, :original
       private :hidden
 
     end
@@ -21,7 +21,7 @@ class Object
   def unhide_methods!
     hidden_method_symbols.each do |sym|
       original = sym.to_s[2..-1].to_sym
-      alias_method :original :sym
+      alias_method :original, :sym
       remove_method :sym
       public :original
     end

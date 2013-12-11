@@ -1,4 +1,4 @@
-require_relative '../local/init.rb'
+require_relative '../init.rb'
 require 'test/unit'
  
 class TestIntegerDivision < Test::Unit::TestCase
