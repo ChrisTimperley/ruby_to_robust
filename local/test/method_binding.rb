@@ -1,4 +1,4 @@
-require_relative '../local/init.rb'
+require_relative '../init.rb'
 require 'test/unit'
 
 module TestMethods
@@ -19,28 +19,27 @@ class TestMethodBinding < Test::Unit::TestCase
   end
 
   def test_good_method_call
+    
+    # Without Local robustness.
     assert_equal(6, TestMethods.add(3,3))
     assert_equal(9, TestMethods.mul(3,3))
     assert_equal(0, TestMethods.sub(3,3))
 
-    # Enable local robustness.
-    RubyToRobust::Local.prepare(TestMethods)
-    RubyToRobust::Local.enable!
-    assert_equal(6, TestMethods.add(3,3))
-    assert_equal(9, TestMethods.mul(3,3))
-    assert_equal(0, TestMethods.sub(3,3))
-    RubyToRobust::Local.disable!
+    # Using Local robustness.
+    assert_equal(6, RubyToRobust::Local.protected(TestMethods) { TestMethods.add(3,3) })
+    assert_equal(9, RubyToRobust::Local.protected(TestMethods) { TestMethods.mul(3,3) })
+    assert_equal(0, RubyToRobust::Local.protected(TestMethods) { TestMethods.sub(3,3) })
+
   end
 
 
   def test_soft_method_call
+
     # Enable local robustness.
-    RubyToRobust::Local.prepare(TestMethods)
-    RubyToRobust::Local.enable!
-    assert_equal(6, TestMethods.ad(3,3))
-    assert_equal(9, TestMethods.ml(3,3))
-    assert_equal(0, TestMethods.sab(3,3))
-    RubyToRobust::Local.disable!
+    assert_equal(6, RubyToRobust::Local.protected(TestMethods) { TestMethods.ad(3,3) })
+    assert_equal(9, RubyToRobust::Local.protected(TestMethods) { TestMethods.ml(3,3) })
+    assert_equal(0, RubyToRobust::Local.protected(TestMethods) { TestMethods.sab(3,3) })
+
   end
 
 end
