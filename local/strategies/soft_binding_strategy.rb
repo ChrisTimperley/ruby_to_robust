@@ -35,7 +35,7 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
   def enable!
     @contexts.each do |c|
       c.hide_methods!
-      c.send(:define_method, :method_missing) do |method_name, *args, &block|
+      c.singleton_class.send(:define_method, :method_missing) do |method_name, *args, &block|
 
         # Convert the method symbol to a string, ready for lookup.
         method_name = method_name.to_s
@@ -58,7 +58,7 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
             # Only calculate the distance if the difference in length between the requested
             # and candidate methods is less or equal to the maximum distance.
             unless (cname.length - method_name.length).abs > max_distance
-              distance = Levenshtein.distance(cname, meth)
+              distance = Levenshtein.distance(cname, method_name)
               if distance <= max_distance and (best_score.nil? or distance < best_score)
                 best_candidate = cname
                 best_score = distance
@@ -99,7 +99,7 @@ class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local
   def disable!
     @contexts.each do |c|
       c.unhide_methods!
-      c.send(:remove_method, :method_missing)
+      c.singleton_class.send(:remove_method, :method_missing)
     end
   end
 
