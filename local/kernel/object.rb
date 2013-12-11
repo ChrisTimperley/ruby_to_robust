@@ -9,9 +9,9 @@ class Object
       next if original == :method_missing
 
       # Prepend "__" to the method name and make it private.
-      hidden = ('__' + sym.to_s).to_sym
-      alias_method :hidden, :original
-      private :hidden
+      hidden = ('__' + original.to_s).to_sym
+      alias_method hidden, original
+      private hidden
 
     end
   end
@@ -21,9 +21,9 @@ class Object
   def unhide_methods!
     hidden_method_symbols.each do |sym|
       original = sym.to_s[2..-1].to_sym
-      alias_method :original, :sym
-      remove_method :sym
-      public :original
+      alias_method original, sym
+      remove_method sym
+      public original
     end
   end
 
@@ -37,7 +37,7 @@ class Object
 
   # Returns an array of the symbols for each of the hidden methods (including their "__").
   def hidden_method_symbols
-    private_instance_methods(false).select { |m| m.start_with? '__' }
+    private_instance_methods(false).select { |m| m.to_s.start_with? '__' }
   end
 
 end
