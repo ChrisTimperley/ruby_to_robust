@@ -7,8 +7,6 @@
 # For now this measure only works with simple methods that do not change the state of 
 # objects or interfere with the global state.
 #
-# NEED TO CLONE PARAMETERS.
-#
 # Author: Chris Timperley
 module RubyToRobust::Global
 
