@@ -1,14 +1,14 @@
 ruby_to_robust
 ==============
 
-RubyToRobust allows you to implement soft semantics in your programs so that they
+ToRobust allows you to implement soft semantics in your programs so that they
 may automatically recover from a range of supported exceptions in some sensible manner,
 allowing the program to continue running.
 
 The soft semantics provided by this project were originally designed to be exploited by
 Wallace.rb to provide robustness and support for soft grammars when using Grammatical Evolution.
 
-Two different soft semantics solutions are provided by RubyToRobust, both based on the
+Two different soft semantics solutions are provided by ToRobust, both based on the
 Local and Global robustness schemes outlined in Chris Timperley's Masters Thesis.
 
 * **Global:** The Global robustness module implements soft semantics by intercepting
