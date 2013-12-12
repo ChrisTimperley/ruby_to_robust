@@ -2,7 +2,7 @@ require 'levenshtein'
 
 # Handles NoMethodError exceptions by mapping missing method calls to valid replacement methods within
 # the same module/class whose name is within a given Levenshtein distance of the missing method name.
-class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Global::Strategy
+class ToRobust::Global::Strategies::NoMethodErrorStrategy < ToRobust::Global::Strategy
 
   attr_accessor :max_distance
 
@@ -81,8 +81,8 @@ class RubyToRobust::Global::Strategies::NoMethodErrorStrategy < RubyToRobust::Gl
     # missing method name in the string with the name of the candidate method.
     return candidates.map! do |c|
       fixed_line = line_contents.gsub(/(\(|^|::|\.|\s|,)#{missing_method_name}\(/) {|s| s[missing_method_name] = c; s}
-      RubyToRobust::Global::Fix.new(
-        [RubyToRobust::Global::Fix::SwapAtom.new(line_no, fixed_line)],
+      ToRobust::Global::Fix.new(
+        [ToRobust::Global::Fix::SwapAtom.new(line_no, fixed_line)],
         validator
       )
     end

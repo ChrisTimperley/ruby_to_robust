@@ -14,7 +14,23 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.required_ruby_version = '>= 1.8.6'
 
-  s.files       = FileList['lib/*', 'test/*'].to_a
+  s.files       = FileList[
+    'LICENSE',
+    'README.md',
+
+    'lib/to_robust.rb',
+
+    'lib/global/*',
+    'lib/global/fix/*',
+    'lib/global/kernel/*',
+    'lib/global/strategies/*',
+
+    'lib/local/*',
+    'lib/local/kernel/*',
+    'lib/local/strategies/*',
+
+    'test/*'
+  ].to_a
 
   s.add_runtime_dependency "levenshtein", ["~> 0.2.2"]
 
