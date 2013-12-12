@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.6'
 
   s.files       = FileList['lib/*', 'test/*'].to_a
-  
-  s.add_run_time_dependency "levenshtein", ["~> 0.2.2"]
+
+  s.add_runtime_dependency "levenshtein", ["~> 0.2.2"]
 
 end

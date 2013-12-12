@@ -1,6 +1,6 @@
 # Ensures that Fixnum division never encounters zero division errors
 # by returning zero when the denominator is zero.
-class RubyToRobust::Local::Strategies::FixnumDivisionStrategy < RubyToRobust::Local::Strategies::SwapMethodStrategy
+class ToRobust::Local::Strategies::FixnumDivisionStrategy < ToRobust::Local::Strategies::SwapMethodStrategy
 
   # Constructs a new FixnumDivisionStrategy.
   def initialize

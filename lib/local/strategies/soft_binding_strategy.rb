@@ -1,3 +1,5 @@
+require 'levenshtein'
+
 # Exploits the 'method_missing' hook to implement a custom message passing protocol.
 #
 # All methods for each associated context are hidden by prepending their names with "__" and
@@ -16,7 +18,7 @@
 # the method call, then:
 # * If there are too few parameters, pad the list with zeroes (arbitrary choice!).
 # * If there are too many parameters, restrict the length of the list to the arity of the method.
-class RubyToRobust::Local::Strategies::SoftBindingStrategy < RubyToRobust::Local::Strategy
+class ToRobust::Local::Strategies::SoftBindingStrategy < ToRobust::Local::Strategy
 
   # Allow the maximum acceptable Levenshtein distance to a candidate method to be
   # adjusted.

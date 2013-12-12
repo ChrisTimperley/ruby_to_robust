@@ -1,4 +1,4 @@
-require_relative '../init.rb'
+require 'to_robust'
 require 'test/unit'
 
 module TestMethods

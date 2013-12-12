@@ -1,6 +1,6 @@
 # A robust procedure is a type of object which mimics the functionality of a standard lambda
 # function but also adds line-specific error debugging information to exception traces.
-class RubyToRobust::Global::RobustProc
+class ToRobust::Global::RobustProc
 
   attr_reader :headers,
               :body,

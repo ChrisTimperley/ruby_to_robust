@@ -1,5 +1,5 @@
 #  Ensures that integer division returns 0 if the denominator is zero.
-class RubyToRobust::Local::Strategies::BignumDivisionStrategy < RubyToRobust::Local::Strategies::SwapMethodStrategy
+class ToRobust::Local::Strategies::BignumDivisionStrategy < ToRobust::Local::Strategies::SwapMethodStrategy
 
   # Constructs a new BignumDivisionStrategy.
   def initialize

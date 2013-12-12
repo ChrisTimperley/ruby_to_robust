@@ -1,7 +1,7 @@
 # The swap method strategy is an abstract base strategy used by
 # other strategies which operate by swapping a given method with
 # an alternative which utilises soft semantics.
-class RubyToRobust::Local::Strategies::SwapMethodStrategy < RubyToRobust::Local::Strategy
+class ToRobust::Local::Strategies::SwapMethodStrategy < ToRobust::Local::Strategy
 
   # Constructs a new swap method strategy.
   #

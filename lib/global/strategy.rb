@@ -1,6 +1,6 @@
 # Strategies are used by the global robustness layer to suggest candidate fixes to errors that occur
 # within a given function.
-class RubyToRobust::Global::Strategy
+class ToRobust::Global::Strategy
 
   # Extracts the co-ordinates of all method calls on a given line.
   #

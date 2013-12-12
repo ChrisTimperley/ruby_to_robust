@@ -8,7 +8,7 @@
 # objects or interfere with the global state.
 #
 # Author: Chris Timperley
-module RubyToRobust::Global
+module ToRobust::Global
 
   @strategies = []
   @max_attempts = 10

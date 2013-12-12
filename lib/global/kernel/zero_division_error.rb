@@ -1,7 +1,5 @@
 # Augments the ZeroDivisionError class to provide the line number that the ZeroDivisionError was encountered
 # by some given method.
-#
-# WARNING: I'm not sure that this will work with the current form of RobustProc!
 class ZeroDivisionError
 
   # Finds the line that the zero division error was first thrown on by

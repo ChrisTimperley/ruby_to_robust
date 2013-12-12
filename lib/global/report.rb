@@ -10,7 +10,7 @@
 #
 # The storage of error and result by the report is exploited by the repair-cycle
 # to prevent redundant method calls.
-class RubyToRobust::Global::Report
+class ToRobust::Global::Report
 
   attr_reader :fixed_method,
               :result,

@@ -1,6 +1,6 @@
 # Ensures that the modulus operator returns zero if a divide
 # by zero error would occur.
-class RubyToRobust::Local::Strategies::FloatModulusStrategy < RubyToRobust::Local::Strategies::SwapMethodStrategy
+class ToRobust::Local::Strategies::FloatModulusStrategy < ToRobust::Local::Strategies::SwapMethodStrategy
 
   # Constructs a new FloatModulusStrategy.
   def initialize

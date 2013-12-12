@@ -1,5 +1,5 @@
 # Coerce nil to 0.
-class RubyToRobust::Local::Strategies::FixnumCoerceStrategy < RubyToRobust::Local::Strategies::SwapMethodStrategy
+class ToRobust::Local::Strategies::FixnumCoerceStrategy < ToRobust::Local::Strategies::SwapMethodStrategy
 
   # Constructs a new FixnumCoerceStrategy.
   def initialize

@@ -11,7 +11,7 @@
 # WARNING: Thread safety is a concern.
 #
 # Author: Chris Timperley
-module RubyToRobust::Local
+module ToRobust::Local
 
   # List of strategies.
   @strategies = []

@@ -1,6 +1,6 @@
 # A fix atom is used to store and represent a single "atomic" change made by a candidate fix which
 # may be represented as a collection of such atomic fixes.
-class RubyToRobust::Global::Fix::Atom
+class ToRobust::Global::Fix::Atom
 
   # The line which this atomic fix changes.
   attr_reader :line_no

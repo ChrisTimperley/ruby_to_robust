@@ -13,7 +13,7 @@
 # a net quantification of both the performance penalty incurred to the method *after* applying the fix
 # and the probability that the fix will be a good one (a good fix would have a lower cost than a worse
 # fix). Candidate fixes could then be processed in ascending order of cost.
-class RubyToRobust::Global::Fix
+class ToRobust::Global::Fix
 
   # Creates a new candidate fix.
   #
@@ -49,7 +49,7 @@ class RubyToRobust::Global::Fix
   # *Returns*
   # A variant of the affected method modified according to the changes given by this fix.
   def apply(method)
-    RubyToRobust::Global::RobustProc.new(method.headers, fixed_source(method.source.dup[1...-1]).join('/\n/)'))
+    ToRobust::Global::RobustProc.new(method.headers, fixed_source(method.source.dup[1...-1]).join('/\n/)'))
   end
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*

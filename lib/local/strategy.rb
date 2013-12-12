@@ -1,7 +1,7 @@
 # Implements a local robustness strategy.
 #
 # These strategies are used to implement "softer" semantics in the program.
-class RubyToRobust::Local::Strategy
+class ToRobust::Local::Strategy
 
   # Prepares this strategy.
   #

@@ -1,5 +1,5 @@
 # A remove atom is used to remove a line from the affected source code.
-class RubyToRobust::Global::Fix::RemoveAtom < RubyToRobust::Global::Fix::Atom
+class ToRobust::Global::Fix::RemoveAtom < ToRobust::Global::Fix::Atom
 
   # Removes a single line from the source code.
   def lines_added; -1; end

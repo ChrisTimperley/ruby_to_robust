@@ -1,5 +1,5 @@
 #  Ensures that integer division returns 0 if the denominator is zero.
-class RubyToRobust::Local::Strategies::NumericDivisionStrategy < RubyToRobust::Local::Strategies::SwapMethodStrategy
+class ToRobust::Local::Strategies::NumericDivisionStrategy < ToRobust::Local::Strategies::SwapMethodStrategy
 
   # Constructs a new NumericDivisionStrategy.
   def initialize
