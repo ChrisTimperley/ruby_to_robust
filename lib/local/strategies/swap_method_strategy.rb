@@ -25,7 +25,7 @@ class ToRobust::Local::Strategies::SwapMethodStrategy < ToRobust::Local::Strateg
 
   # Restores the target method to its original "hard" semantics.
   def disable!
-    @binding.send(:define_method, @name, @binding.instance_method(@backup))
+    @binding.send(:alias_method, @name, @backup)
     @binding.send(:remove_method, @backup)
   end
 
