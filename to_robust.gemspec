@@ -3,8 +3,8 @@ require 'rake'
 Gem::Specification.new do |s|
 
   s.name        = 'to_robust'
-  s.version     = '1.0.0.pre'
-  s.date        = '2013-12-12'
+  s.version     = '1.0.1'
+  s.date        = '2014-08-10'
   s.summary     = "Adds optional soft semantics and self-repair to methods."
   s.description = <<-EOF
     Soft semantics for Ruby to automatically recover from fatal exceptions and to repair damaged programs.
@@ -36,6 +36,6 @@ Gem::Specification.new do |s|
   ].to_a
   s.test_files = FileList['test/local/*', 'test/global/*'].to_a
 
-  s.add_runtime_dependency "levenshtein", ["~> 0.2.2"]
+  #s.add_runtime_dependency "levenshtein", ["~> 0.2.2"]
 
 end
