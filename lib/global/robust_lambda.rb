@@ -1,6 +1,8 @@
+# encoding: utf-8
+#
 # A robust procedure is a type of object which mimics the functionality of a standard lambda
 # function but also adds line-specific error debugging information to exception traces.
-class ToRobust::Global::RobustProc
+class ToRobust::Global::RobustLambda
 
   attr_reader :headers,
               :body,
@@ -44,5 +46,12 @@ end"
     @source = other.source
     instance_eval(@source.join("\n"), code, 0)
   end
+
+  # Calls this robust lambda function (under global robustness protection)
+  # and returns the result.
+  def [](*args)
+    ToRobust::Global.execute(self, args)
+  end
+  alias_method :call, :[]
 
 end
