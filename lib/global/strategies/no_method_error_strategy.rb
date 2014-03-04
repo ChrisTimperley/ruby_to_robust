@@ -68,7 +68,9 @@ class ToRobust::Global::Strategies::NoMethodErrorStrategy < ToRobust::Global::St
     # method is less or equal to the threshold. Order the remaining candidates
     # before throwing away the distance information.
     candidates.reject!{|c| c[1] > @max_distance}
-    candidates.sort {|x,y| x[1] <=> y[1]}
+    candidates.sort! {|x,y| 
+      x[1] <=> y[1]
+    }
     candidates.map!{|c| c[0]}
     
     # We validate the exception by ensuring that any further exceptions aren't
