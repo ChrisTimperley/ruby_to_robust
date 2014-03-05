@@ -28,6 +28,7 @@ module ToRobust::Local
   # ==== Returns
   # The result of the block execution.
   def self.protected(*contexts, &block)
+
     @strategies.each { |s| s.prepare!(contexts) }
     @strategies.each { |s| s.enable! }
     

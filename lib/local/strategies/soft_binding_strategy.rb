@@ -43,7 +43,7 @@ class ToRobust::Local::Strategies::SoftBindingStrategy < ToRobust::Local::Strate
         method_name = method_name.to_s
 
         # Maximum levenshtein distance allowed between a candidate and the requested method.
-        max_distance = RubyToRobust::Local::Strategies::SoftBindingStrategy.max_distance
+        max_distance = ToRobust::Local::Strategies::SoftBindingStrategy.max_distance
 
         # Cache the list of candidate methods.
         candidates = hidden_methods
@@ -71,6 +71,7 @@ class ToRobust::Local::Strategies::SoftBindingStrategy < ToRobust::Local::Strate
           # Attempt to call the best candidate.
           # If no appropriate candidate is found, raise a NoMethodError.
           raise NoMethodError if best_candidate.nil?
+
           method_name = best_candidate
 
         end
