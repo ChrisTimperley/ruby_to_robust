@@ -49,7 +49,7 @@ class ToRobust::Global::Fix
   # *Returns*
   # A variant of the affected method modified according to the changes given by this fix.
   def apply(method)
-    ToRobust::Global::RobustLambda.new(method.headers, fixed_source(method.source.dup[1...-1]).join('/\n/)'))
+    ToRobust::Global::GlobalRobustLambda.new(method.headers, fixed_source(method.source.dup[1...-1]).join('/\n/)'))
   end
 
   # In the event that the method resulting from the fix encounters an error, this method *attempts*

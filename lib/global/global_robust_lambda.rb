@@ -2,23 +2,23 @@
 #
 # A robust procedure is a type of object which mimics the functionality of a standard lambda
 # function but also adds line-specific error debugging information to exception traces.
-class ToRobust::Global::RobustLambda
+class ToRobust::Global::GlobalRobustLambda
 
   attr_reader :headers,
               :body,
               :source
 
-  # Constructs a new Robust procedure.
+  # Constructs a new Global Robust lambda function.
   #
-  # *Parameters:*
-  # * headers, the arguments to the procedure (as an array of argument names).
-  # * body, the body of the procedure.
+  # ==== Parameters
+  # [+headers+]   the arguments to the lambda function (as an array of argument names).
+  # [+body+]      the body of the lambda function.
   def initialize(headers, body)
     
     @headers = headers.freeze
     @body = body.freeze
 
-    # Dynamically create the procedure as the "call" method of this object,
+    # Dynamically create the function as the "call" method of this object,
     # and supply file and line debugging information.
     @source = "def call(#{@headers.join(', ')})
   #{body}
@@ -32,14 +32,14 @@ end"
 
   end
 
-  # Every robust procedure has its own unique code that is used as its source
+  # Every robust lambda has its own unique code that is used as its source
   # file and is used to identify error information specific to it.
   def code
     "ROBUST_PROC_#{object_id}"
   end
 
-  # Makes this robust procedure object take on the function of another
-  # robust procedure. This allows repairs to be optionally saved.
+  # Makes this robust lambda object take on the function of another
+  # robust lambda. This allows repairs to be optionally saved.
   def become(other)
     @headers = other.headers
     @body = other.body

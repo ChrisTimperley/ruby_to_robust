@@ -8,7 +8,7 @@
 # This class would then contain details of the target class and method as well as a
 # lambda function implementing the patched form of the method.
 #
-# WARNING: Thread safety is a concern.
+# WARNING: This is not thread safe!
 #
 # Author: Chris Timperley
 module ToRobust::Local
@@ -18,15 +18,15 @@ module ToRobust::Local
   class << self
     attr_reader :strategies
   end
-
+  
   # Executes a given block under local robustness protection.
   #
-  # *Parameters:*
-  # * *contexts, depickled list of context objects to protect method calls for.
-  # * &block, the block to execute under local robustness protection.
+  # ==== Parameters
+  # [+*contexts]  depickled list of context objects to protect method calls for.
+  # [+&block]     the block to execute under local robustness protection.
   #
-  # *Returns:*
-  # * The result of the block execution.
+  # ==== Returns
+  # The result of the block execution.
   def self.protected(*contexts, &block)
     @strategies.each { |s| s.prepare!(contexts) }
     @strategies.each { |s| s.enable! }

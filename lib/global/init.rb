@@ -4,7 +4,7 @@ module ToRobust; end
 
 require_relative 'kernel/init'
 require_relative 'global'
-require_relative 'robust_lambda'
+require_relative 'global_robust_lambda'
 require_relative 'strategy'
 require_relative 'strategies/init'
 require_relative 'fix'
